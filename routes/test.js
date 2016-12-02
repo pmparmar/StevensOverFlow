@@ -1,7 +1,7 @@
 const UserData = require('../data');
 const passport = require('passport')
   , LocalStrategy = require('passport-local').Strategy;
-
+s
 
 passport.use(new LocalStrategy(
   function(username, password, done) {
