@@ -1,1 +1,24 @@
-
+[
+  {
+    "_id":9,
+    "postId":6,
+    "userId":1,
+    "answerBody":"lololo",
+    "attachments":"",
+    "isAccepted":true,
+    "votes": "",
+    "createDate": "12/1/2016",
+    "updateDate": "12/1/2016"
+  },
+  {
+    "_id":10,
+    "postId":7,
+    "userId":2,
+    "answerBody":"lololo",
+    "attachments":"",
+    "isAccepted":true,
+    "votes": "",
+    "createDate": "12/1/2016",
+    "updateDate": "12/1/2016"
+  }
+]
