@@ -1,0 +1,20 @@
+[
+  {
+    "_id":6,
+    "userId": 1,
+    "postTitle":"what is node.js?",
+    "attachments":"",
+    "votes":"2",
+    "createDate":"12/1/2016",
+    "updateDate":"12/1/2016"
+  },
+  {
+    "_id":7,
+    "userId": 2,
+    "postTitle":"what is html?",
+    "attachments":"",
+    "votes":"1",
+    "createDate":"12/1/2016",
+    "updateDate":"12/1/2016"
+  }
+]

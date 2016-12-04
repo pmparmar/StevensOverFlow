@@ -1,0 +1,23 @@
+[
+  {
+    "_id":1,
+    "name": "Priya Parmar",
+    "password": "priya",
+    "email": "pparmar2@stevens.edu",
+    "points": 500
+  },
+  {
+    "_id":2,
+    "name": "Archita Zaveri",
+    "password": "archita",
+    "email": "azaveri@stevens.edu",
+    "points": 200
+  },
+  {
+    "_id":3,
+    "name": "Siddharth Contracter",
+    "password": "siddharth",
+    "email": "scontrac@stevens.edu",
+    "points": 100
+  }
+]

@@ -1,0 +1,18 @@
+[
+  {
+    "_id":8,
+    "answerId": 1,
+    "userId":3,
+    "commentBody":"its type of jacascript",
+    "createDate":"12/1/2016",
+    "updateDate":"12/1/2016"
+  },
+  {
+    "_id":9,
+    "answerId": 2,
+    "userId":1,
+    "commentBody":"its Hypertext Markup language",
+    "createDate":"12/1/2016",
+    "updateDate":"12/1/2016"
+  }
+]
