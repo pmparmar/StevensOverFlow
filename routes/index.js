@@ -90,7 +90,8 @@ const constructorMethod = (app) => {
             })
         });
     });
-
+    
+    // when search cliked with a 'post' dropdown tag
     app.get('/searchpost', (req, res) => {
         //excepting searching ULR like :
         // :3000/search?q=java
@@ -107,7 +108,8 @@ const constructorMethod = (app) => {
             })
         });
     });
-
+    
+    // when search cliked with a 'user' dropdown tag
     // search user ???  not sure
     app.get('/searchuser', (req, res) => {
         //excepting searching ULR like :
@@ -161,14 +163,16 @@ const constructorMethod = (app) => {
         }
     });
 
-    //post method to create a new anster, 
-    //no single page for answer, the form is on the bottom 
+    //post method to create a new answer, 
+    //no single page for answer, the form is on the bottom of the post page
     app.post('/answering', (req.res) => {
         if (!req.isAuthenticated()) {
             res.render('partials/postform', {
                 loginerrormessage: 'Please login'
             });
         } else {
+            
+            // the postid that this comment belongs to is included in the req.body
             Data.answers.create(req.user, req.body).then(locationhash => {
 
                 // answer successed, go to the new answer location of the same post page
@@ -183,7 +187,7 @@ const constructorMethod = (app) => {
     });
 
     //post method to create a new comment, 
-    //no single page for comment, the form is inside the postpage 
+    //no single page for comment, the form apperas inside the post page when you click comment
     app.post('/commenting', (req.res) => {
         if (!req.isAuthenticated()) {
 
@@ -191,9 +195,12 @@ const constructorMethod = (app) => {
                 loginerrormessage: 'Please login'
             });
         } else {
+            
+            // the answer that this comment belongs to is included in the req.body
+            // the post id that the answer belongs to is included in the req.body too
             Data.cmoments.create(req.user, req.body).then(locationhash => {
 
-                // comment successed, go to the new answer comment of the same post page
+                // comment successed, go to the new comment location of the same post page
                 res.redirect('/post/' + req.body.postid + '#' + locationhash);
             }).catch(err => {
 
