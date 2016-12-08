@@ -1,48 +1,40 @@
 const UserData = require('../data');
-const passport = require('passport')
-  , LocalStrategy = require('passport-local').Strategy;
+const passport = require('passport'),
+    LocalStrategy = require('passport-local').Strategy;
 
 
-passport.use(new LocalStrategy(
-  function(username, password, done) {
-    UserData.findOne(username,password).then(res => {
-    	return done(null, user);
-    }).catch(err => {
-    	return done(null, false, { message: err });
+constructorMethod = (passport) => {
+
+    passport.use(new LocalStrategy({
+            passReqToCallback: true
+        },
+        function(req, username, password, done) {
+            UserData.findOne(username, password).then(res => {
+                    console.log('findOne found :');
+                    console.log(res);
+                    return done(null, res);
+                })
+                .catch(err => {
+                    console.log('findOne cannt find: ' + err);
+                    return done(null, false, req.flash('loginmessage', err));
+                });
+        }
+    ));
+
+
+    passport.serializeUser(function(user, cb) {
+        cb(null, user._id);
     });
-  }
-));
 
-const constructorMethod = (app) => {
-    app.post('/login',
-        passport.authenticate('local', {
-            successRedirect: '/',
-            failureRedirect: '/',
-            failureFlash: true
+    passport.deserializeUser(function(id, cb) {
+        UserData.findById(id).then(res => {
+            cb(null, res);
+        }).catch(err => {
+            cb(err, null);
         });
-    );
-
-    app.get('/login' (req, res) => {
-    	res.render('partials/loginform',{});
     });
 
-    app.get('/private' (req, res) => {
-    	res.render('partials/private',{user:req.user});
-    });
-    app.get('/' (req, res) => {
-    	UserData.hashedPassword1();
-    	UserData.hashedPassword2();
-    	UserData.hashedPassword3();
-    	if(req.user)
-    		res.redirect('/private'+req.user);
-    	res.render()
+}
 
-
-    });
-
-    app.use("*", (req, res) => {
-        res.sendStatus(404);
-    });
-};
 
 module.exports = constructorMethod;

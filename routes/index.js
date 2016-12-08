@@ -9,16 +9,32 @@ configPassport(passport);
 
 
 const constructorMethod = (app) => {
+
+    app.use(passport.initialize());
+    app.use(passport.session());
+
+    //http://stackoverflow.com/questions/26859349/can-you-authenticate-with-passport-without-redirecting
+
+    // app.post('/login',
+    //     passport.authenticate('local'),
+    //     function(req, res) {
+    //         // If this function gets called, authentication was successful.
+    //         // `req.user` contains the authenticated user.
+    //         res.json({"status":"success","user":req.user});
+    //     });
+
     app.post('/login',
         passport.authenticate('local', {
-            successRedirect: '/profile',
-            failureRedirect: '/login',
+            successRedirect: '/',
+            failureRedirect: '/',
             failureFlash: true
         })
     );
 
+
+
     app.post('/signup', (req, res) => {
-        Data.user.Signup(req.body.email, req.body.password).then(info => {
+        Data.Signup(req.body.email, req.body.password).then(info => {
             console.log(info); //e.g.  sign up successed, usrname: pasword:
 
             /* refer from
@@ -67,8 +83,9 @@ const constructorMethod = (app) => {
     app.get('/profile',
         require('connect-ensure-login').ensureLoggedIn(),
         function(req, res) {
-            res.render('partials/profile', {
+            res.render('partials/profile_working', {
                 user: req.user
+           //     partial:"profile-script"
             })
         });
 
@@ -80,8 +97,9 @@ const constructorMethod = (app) => {
         // it will always work even user is undefined
         Data.DefaultSearch(req.user).then(postlist => {
             res.render('partials/home', {
-                list: postlist
-                user: req.user
+                list: postlist,
+                user: req.user,
+                loginmessage:loginmessage
             });
         }).catch(err => {
             res.render('partials/home', {
@@ -145,7 +163,7 @@ const constructorMethod = (app) => {
     });
 
     //post method to create a new post(quesiton)
-    app.post('/posting', (req.res) => {
+    app.post('/posting', (req, res) => {
         if (!req.isAuthenticated()) {
             res.render('partials/postform', {
                 loginerrormessage: 'Please login'
@@ -163,7 +181,7 @@ const constructorMethod = (app) => {
 
     //post method to create a new anster, 
     //no single page for answer, the form is on the bottom 
-    app.post('/answering', (req.res) => {
+    app.post('/answering', (req, res) => {
         if (!req.isAuthenticated()) {
             res.render('partials/postform', {
                 loginerrormessage: 'Please login'
@@ -184,7 +202,7 @@ const constructorMethod = (app) => {
 
     //post method to create a new comment, 
     //no single page for comment, the form is inside the postpage 
-    app.post('/commenting', (req.res) => {
+    app.post('/commenting', (req, res) => {
         if (!req.isAuthenticated()) {
 
             res.render('partials/postform', {
