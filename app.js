@@ -1,6 +1,6 @@
 const app = require("express")();
 
-const static = express.static(__dirname + '/public');
+const static = require("express").static(__dirname + '/public');
 
 const exphbs = require('express-handlebars');
 const Handlebars = require('handlebars');
@@ -16,7 +16,7 @@ const handlebarsInstance = exphbs.create({
         }
     },
     partialsDir: [
-        'views/partials/'
+        'views/scriptspartial/'
     ]
 });
 
@@ -40,8 +40,7 @@ const rewriteUnsupportedBrowserMethods = (req, res, next) => {
 app.use(function(req, res, next) {
         console.log('req.method and url  is ' + req.method + " " + req.url);
         console.log("req--------------------:")
-        console.log(req)
-        console.log('');
+  
         next();
     })
 
