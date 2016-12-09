@@ -54,14 +54,8 @@ const constructorMethod = (app) => {
     });
 
     app.get('/login', (req, res) => {
-        if (req.isAuthenticated()) {
-            res.redirect('/profile');
-        } else {
-            // message expecting from login
-            render('partials/login', {
-                message: req.flash('loginmessage')
-            });
-        }
+            res.redirect('/');
+       
     });
 
     app.get('/logout',

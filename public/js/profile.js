@@ -17,9 +17,10 @@
     var body2 = $("#tag2content");
     var body3 = $("#tag3content");
     var body4 = $("#tag4content");
-    var loginmode = $("#loginModal");
 
     var body =$("#bodycontainer");
+    console.log('body is ');
+    console.log(body);
 
     body.css('margin-top','40px');
 
@@ -30,6 +31,7 @@
         console.log('load called, arg is '+arg);
         switch (arg) {
             case "#profile":
+                console.log('in profile case');
                 hiddenall();
                 body1.removeClass("hidden");
                 tag1.addClass("active");
@@ -37,6 +39,8 @@
                 // statements_1
                 break;
             case "#edit":
+                console.log('in edit case');
+
                 hiddenall();
                 body2.removeClass("hidden");
                 tag2.addClass("active");
@@ -44,6 +48,8 @@
                 // statements_1
                 break;
             case "#question":
+                console.log('in question case');
+
                 hiddenall();
                 body3.removeClass("hidden");
                 tag3.addClass("active");
@@ -51,6 +57,8 @@
                 // statements_1
                 break;
             case "#answer":
+                console.log('in answer case');
+
                 hiddenall();
                 body4.removeClass("hidden");
                 tag4.addClass("active");

@@ -7,8 +7,13 @@ body {
 	padding-top: 20px;
 	/*color: red;*/
 	text-decoration: bold;
-	font-size: 3em;
+	font-size: 4em;
+	color: white;
 	font-family: Monaco;
+}
+#titlebar {
+
+	background-image: url('https://pbs.twimg.com/media/CzPjYQoVQAUmWWo.jpg');
 }
 
 .jumbotron {

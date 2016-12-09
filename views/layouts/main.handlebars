@@ -12,20 +12,19 @@
         <script src="/public/js/main.js" type="text/javascript" charset="utf-8" async defer></script>
 
         <!--wanna use partial-->
-        <script type="text/javascript" src="/public/js/profile.js"></script>
         <!--wanna use partial-->
 
         <link rel="stylesheet" href="/public/css/main.css">
-        <title>Main</title>
+        <title>Stevns Overflow</title>
     </head>
     <body>
         <div class="container"> 
             <!-- header bar -->
-            <div class="row jumbotron">
+            <div class="row jumbotron" id="titlebar">
                 <div class="col-sm-12">
                     <div class="row">
                         <div class="col-sm-7">
-                            <p id="stevens-title">some title</p>
+                            <p id="stevens-title">Stevns Overflow</p>
                             <!-- <img id="stevens-title" src="../image/logo.png" > -->
                         </div>
                         <div class="col-sm-5">
@@ -189,5 +188,8 @@
             </div>
         </div>
        {{!--  {{> (lookup . 'partial') }} --}}
+
+        <script type="text/javascript" src="/public/js/profile.js"></script>
+
     </body>
 </html>

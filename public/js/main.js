@@ -4,6 +4,7 @@ $(function() {
 	var loginbtn = $("#loginBtn");
 	var userbtn = $("#userbtn");    
 	var errmsg = $("#loginmessage");
+    var loginmode = $("#loginModal");
 
 
     $('#login-form-link').click(function(e) {
