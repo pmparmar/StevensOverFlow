@@ -1,6 +1,8 @@
 var mongoose = require('mongoose');
 mongoose.connect('mongodb://localhost/alpha');
 
+
+//
 var UserSchema = new mongoose.Schema({
     name: {
         type: String,
@@ -15,7 +17,7 @@ var UserSchema = new mongoose.Schema({
     icon: {
         type: String,
         lowercase: true,
-    }
+    },
     points: {
         type: Number,
         default: 0
@@ -46,7 +48,9 @@ var AnswerSchema = new mongoose.Schema({
         ref: 'Post'
     },
 
-    answerBody: String,
+    body: String,
+    title: String,
+
     attachments: String,
     isAccepted: Boolean,
     votes: {
@@ -70,7 +74,9 @@ var PostSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User'
     },
-    postTitle: String,
+    title: String,
+    body: String,
+
     attachments: String,
     votes: {
         type: Number,
@@ -199,11 +205,13 @@ module.exports = {
         })
     },
     createPost: function(postObject, userId, callback) {
+        console.log('createPost called');
         return new Promise((resolve, reject) => {
 
 
             var post = new Post(postObject);
-            this.getUserById(userId, function(us) {
+            this.getUserById(userId)
+            .then((us) => {
                 post.userId = us;
                 post.save(function(err, post) {
                     if (err) {
@@ -213,7 +221,14 @@ module.exports = {
                     us.save();
                     resolve(post);
                 });
-            });
+            })
+            .catch(err => {
+                reject(err);
+            })
+
+            // this.getUserById(userId, function(us) {
+                
+            // });
         })
     },
     deletePost: function(id, callback) {

@@ -33,7 +33,7 @@
                         <div class="form-group">
                             <label class="col-lg-3 control-label">Email:</label>
                             <div class="col-lg-8">
-                                <input class="form-control" type="text" value={{user.Email}} disabled>
+                                <input class="form-control" type="text" value={{user.email}} disabled>
                             </div>
                         </div>
                         <div class="form-group">
@@ -60,32 +60,8 @@
                 </div>
               </div>
             </div> -->
-                        <div class="form-group">
-                            <label class="col-md-3 control-label">Username:</label>
-                            <div class="col-md-8">
-                                <input class="form-control" type="text" placeholder="Your Username">
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label class="col-md-3 control-label">Password:</label>
-                            <div class="col-md-8">
-                                <input class="form-control" type="password" placeholder="Enter Your Password">
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label class="col-md-3 control-label">Confirm password:</label>
-                            <div class="col-md-8">
-                                <input class="form-control" type="password" placeholder="Confirm Your Password">
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label class="col-md-3 control-label"></label>
-                            <div class="col-md-8">
-                                <input type="button" class="btn btn-primary" value="Save Changes">
-                                <span></span>
-                                <input type="reset" class="btn btn-default" value="Reset">
-                            </div>
-                        </div>
+                        
+                       
                     </form>
                 </div>
             </div>
@@ -102,31 +78,23 @@
                 </div>
                 <!-- edit form column -->
                 <div class="col-md-9 personal-info">
-                    <div class="alert alert-info alert-dismissable">
-                        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                        <!-- <i class="fa fa-coffee"></i> -->
-                        This is an <strong>.alert</strong>. Use this to show important messages to the user.
+                    <div class="alert alert-danger hidden" id="edit-form-alert">                        
                     </div>
                     <h3>Personal info</h3>
-                    <form class="form-horizontal" role="form">
+                    <form class="form-horizontal" id="edit-profile-form" role="form">
                         <div class="form-group">
-                            <label class="col-lg-3 control-label">First name:</label>
+                            <label class="col-lg-3 control-label">Name:</label>
                             <div class="col-lg-8">
-                                <input class="form-control" type="text" placeholder="Your Firstname">
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label class="col-lg-3 control-label">Last name:</label>
-                            <div class="col-lg-8">
-                                <input class="form-control" type="text" placeholder="Your Lastname">
+                                <input class="form-control" id="edit-name" name="name" type="text" placeholder="{{user.name}}" value="{{user.name}}">
                             </div>
                         </div>
                         <div class="form-group">
                             <label class="col-lg-3 control-label">Email:</label>
                             <div class="col-lg-8">
-                                <input class="form-control" type="text" placeholder="xxxx@stevens.edu">
+                                <input class="form-control" id="edit-email" name="email" type="text" value="{{user.email}}">
                             </div>
                         </div>
+                       
                         <!-- <div class="form-group">
               <label class="col-lg-3 control-label">Time Zone:</label>
               <div class="col-lg-8">
@@ -144,28 +112,23 @@
                 </div>
               </div>
             </div> -->
-                        <div class="form-group">
-                            <label class="col-md-3 control-label">Username:</label>
-                            <div class="col-md-8">
-                                <input class="form-control" type="text" placeholder="Your Username">
-                            </div>
-                        </div>
+                     
                         <div class="form-group">
                             <label class="col-md-3 control-label">Password:</label>
                             <div class="col-md-8">
-                                <input class="form-control" type="password" placeholder="Enter Your Password">
+                                <input class="form-control" type="password" id="edit-password" name="password" placeholder="Enter Your Password">
                             </div>
                         </div>
                         <div class="form-group">
                             <label class="col-md-3 control-label">Confirm password:</label>
                             <div class="col-md-8">
-                                <input class="form-control" type="password" placeholder="Confirm Your Password">
+                                <input class="form-control" id="edit-confirm-password" name="confirm_password" type="password" placeholder="Confirm Your Password">
                             </div>
                         </div>
                         <div class="form-group">
                             <label class="col-md-3 control-label"></label>
                             <div class="col-md-8">
-                                <input type="button" class="btn btn-primary" value="Save Changes">
+                                <input type="submit" class="btn btn-primary" value="Save Changes">
                                 <span></span>
                                 <input type="reset" class="btn btn-default" value="Reset">
                             </div>

@@ -4,7 +4,7 @@
 
     console.log("location.hash is ");
     console.log(location.hash)
-   
+
     window.onhashchange = (function() {
         load(location["hash"]);
         /* body... */
@@ -17,14 +17,78 @@
     var body2 = $("#tag2content");
     var body3 = $("#tag3content");
     var body4 = $("#tag4content");
+    var edit_formAlert = $("#edit-form-alert");
 
-    var body =$("#bodycontainer");
+    var body = $("#bodycontainer");
     console.log('body is ');
     console.log(body);
 
-    body.css('margin-top','40px');
+    body.css('margin-top', '40px');
 
     load(location["hash"]);
+
+    $("#edit-profile-form").submit(e => {
+        e.preventDefault();
+        var name = $("#edit-name").val();
+        var email = $("#edit-email").val();
+        var password = $("#edit-password").val();
+        var confirmpassword = $("#edit-confirm-password").val();
+        if (!name) {
+            edit_formAlert.text('You must provide a username');
+            edit_formAlert.removeClass('hidden');
+            return;
+        }
+        if (!email) {
+            edit_formAlert.text('You must provide a email');
+            edit_formAlert.removeClass('hidden');
+            return;
+        }
+        if (!password) {
+            edit_formAlert.text('You must provide a password');
+            edit_formAlert.removeClass('hidden');
+            return;
+        }
+        if (confirmpassword !== password) {
+            edit_formAlert.text('Confrim Password does not match');
+            edit_formAlert.removeClass('hidden');
+            return;
+        }
+
+        if (name && email && password) {
+            var requestConfig = {
+                method: "POST",
+                url: "/editprofile",
+                contentType: 'application/json',
+                data: JSON.stringify({
+                    name: name,
+                    email: email,
+                    password: password,
+                })
+            };
+
+            $.ajax(requestConfig).then(function(responseMessage) {
+                console.log('using ajax in submit');
+                if (responseMessage.status === "success") {
+                    //jump to new note after add note successed
+                    console.log('in front js, edit successed, goingto jump');
+                    window.location.href = '/profile#edit';
+                } else {
+                    console.log('in front js: signup failed')
+                    console.log(responseMessage.status);
+                    edit_formAlert.text(responseMessage.status);
+                    edit_formAlert.removeClass('hidden');
+                }
+            })
+        }
+
+    });
+
+
+
+
+
+
+
 
 
     function load(arg) {

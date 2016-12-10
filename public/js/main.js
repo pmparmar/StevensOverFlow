@@ -29,7 +29,7 @@ $(function() {
     });
 
 
-    $("#register-form").submit(function(event){
+    $("#register-form").submit(function(event) {
         event.preventDefault();
 
         var sign_up_username = $("#signup-username").val();
@@ -45,18 +45,18 @@ $(function() {
             signup_formAlert.text('You must provide a email');
             signup_formAlert.removeClass('hidden');
             return;
-        } 
+        }
         if (!sign_up_password) {
             signup_formAlert.text('You must provide a password');
             signup_formAlert.removeClass('hidden');
             return;
         }
-        if(confirm_password !== sign_up_password){
-        	signup_formAlert.text('Confrim Password does not match');
+        if (confirm_password !== sign_up_password) {
+            signup_formAlert.text('Confrim Password does not match');
             signup_formAlert.removeClass('hidden');
             return;
         }
-        
+
         if (sign_up_username && sign_up_email && sign_up_password) {
             var requestConfig = {
                 method: "POST",
@@ -77,9 +77,9 @@ $(function() {
                     console.log('in front js, sigup successed, goingto jump');
                     window.location.href = '/profile';
                 } else {
-                	console.log('in front js: signup failed')
-                	console.log(responseMessage.status);
-                    signup_formAlert.text("Sipup failed");
+                    console.log('in front js: signup failed')
+                    console.log(responseMessage.status);
+                    signup_formAlert.text(responseMessage.status);
                     signup_formAlert.removeClass('hidden');
                 }
             })
@@ -105,12 +105,16 @@ $(function() {
         window.location.href = $(this).data("href");
     });
 
- 
+
 
     console.log('userbtn.val() is ' + userbtn.val());
     if (userbtn.val().length > 0) {
+        console.log('in front, userbtn length >0');
         loginbtn.addClass("hidden");
         userbtn.removeClass("hidden");
+    } else {
+        console.log('in front, userbtn length does not>0');
+      //  $("#ask-btn").attr('disabled','disabled');
     }
 
 

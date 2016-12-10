@@ -7,6 +7,17 @@ const configPassport = require('./passportconfig');
 const passport = require('passport');
 configPassport(passport);
 
+// const recursiveGetCommentsFromAnswers = (answers, index, dict) => {
+//     if (index >= answers.length) {
+//         return 
+//     }
+//     Data.database.getCommentsByAnwersId(answers[index]._id)
+//     .then((comments) => {
+//         dict[answers[index]._id] = comments;
+//         recursiveGetCommentsFromAnswers(answers, index + 1, dict);
+//     })
+// }
+
 function signupcheck(email) {
 
     return Data.database.getUserByEmail(email).then(() => {
@@ -16,11 +27,68 @@ function signupcheck(email) {
         console.log('check: no existing')
         return Promise.resolve("haha");
     });
-
 }
 
+function edituser(id, body) {
+
+    return new Promise((resolve, reject) => {
+
+        Data.database.getUserByEmail(body.email)
+            .then(() => {
+                reject("Email exists");
+            }).catch((res) => {
+                console.log(res);
+                Data.database.updateUser(id, "name", body.name)
+                    .then(user => {
+                        return Data.database.updateUser(id, "email", body.email)
+                    })
+                    .then((user) => {
+                        return Data.database.updateUser(id, "pasword", body.password);
+                    })
+                    .then(user => {
+                        resolve("success");
+                    })
+                    .catch(err => {
+                        reject(err);
+                    })
+            })
+    })
+}
 
 let getpostinfo = function(id) {
+
+    let single_post_result = {}
+    let db = Data.database;
+    
+
+    db.getPostById(id)
+        .then((post) => {
+            single_post_result.post = post;
+            return db.getAnswersByPostId(post._id)
+        })
+        .then(answers => {
+            let commentsPromises = [];
+            single_post_result.answer = answers;
+            answers.forEach( function(element, index) {
+                commentsPromises.push(db.getCommentsByAnwersId(element._id));
+            });
+            return Promise.all(commentsPromises);
+        })
+        .then(comments => {
+            for (let i = 0; i < comments.length; ++i) {
+                single_post_result.answer[i].comments = comments[i];
+            }
+            console.log('number of answers in single_post_result: ' + single_post_result.answer.length)
+            // single_post_result is done
+            // be aware of answers and answer, no s !!!!
+            return Promise.resolve(single_post_result);
+        })
+        .catch(err => {
+            return Promise.reject(err);
+        })
+
+
+/*
 
     let single_post_result = {
         post: {
@@ -64,11 +132,15 @@ let getpostinfo = function(id) {
             ]
         }]
     }
-    return Promise.resolve(single_post_result);
+
+    */
+ //   return Promise.resolve(single_post_result);
 
 }
 
 function getuserinfo(id) {
+
+    console.log("in getuserinfo: id is " + id);
 
     let res = {
         post: [{
@@ -107,8 +179,6 @@ function getuserinfo(id) {
 
     }
     return Promise.resolve(res);
-
-
 }
 
 
@@ -126,6 +196,14 @@ const constructorMethod = (app) => {
     //         // `req.user` contains the authenticated user.
     //         res.json({"status":"success","user":req.user});
     //     });
+
+
+    //form page for creating a new post(quesiton)
+    app.get('/posting', (req, res) => {
+        console.log('app.get posting called');
+        res.render('partials/posting')
+    });
+
 
     app.post('/login',
         passport.authenticate('local', {
@@ -196,7 +274,7 @@ const constructorMethod = (app) => {
         function(req, res) {
             getuserinfo(req.user._id).then(userinfo => {
                 res.render('partials/profile_working', {
-                    user: userinfo.user,
+                    user: req.user,
                     postList: userinfo.post,
                     answerList: userinfo.answer
                 })
@@ -212,7 +290,7 @@ const constructorMethod = (app) => {
         }
         getuserinfo(req.param.id).then(userinfo => {
             res.render('partials/profile', {
-                user: userinfo.user,
+                user: req.user,
                 postList: userinfo.post,
                 answerList: userinfo.answer
             })
@@ -237,12 +315,12 @@ const constructorMethod = (app) => {
                 res.render('partials/home', {
                     postList: postlist,
                     user: req.user
-                    // a: "what the fuck"
+                        // a: "what the fuck"
                 });
             } else {
                 res.render('partials/home', {
                     postList: postlist
-                    // a: "what the fuck"
+                        // a: "what the fuck"
                 });
             }
 
@@ -324,26 +402,27 @@ const constructorMethod = (app) => {
         });
     });
 
-    //form page for creating a new post(quesiton)
-    app.get('/posting', (req, res) => {
-        res.render('partials/postform')
-    });
 
     //post method to create a new post(quesiton)
     app.post('/posting', (req, res) => {
-        if (!req.isAuthenticated()) {
-            res.render('partials/postform', {
-                loginerrormessage: 'Please login'
+
+        console.log('in route post posting callde');
+        console.log('req.body:');
+        console.log(req.body);
+        console.log('user id:');
+        console.log(req.user._id);
+
+        Data.database.createPost(req.body, req.user._id).then(newpost => {
+            console.log('createPost successed');
+            res.redirect('/post/' + newpost._id);
+        }).catch(err => {
+            console.log('createPost falied, err:');
+            console.log(err);
+            res.render('partials/posting', {
+                message: err
             });
-        } else {
-            Data.posts.create(req.user, req.body).then(newpost => {
-                res.redirect('/post/{{newpost._id}}');
-            }).catch(err => {
-                res.render('partials/postform', {
-                    message: err
-                });
-            });
-        }
+        });
+
     });
 
     //post method to create a new anster, 
@@ -368,6 +447,22 @@ const constructorMethod = (app) => {
 
             });
         }
+    });
+
+    app.post('/editprofile', (req, res) => {
+        edituser(req.user._id, req.body).then(info => {
+            res.json({
+                "status": info
+            });
+        }).catch(err => {
+            console.log('in editprofile route : err:');
+            console.log(err);
+            res.json({
+                "status": "falied",
+                msg: err
+            })
+        });
+
     });
 
     //post method to create a new comment, 
