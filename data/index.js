@@ -10,6 +10,68 @@ var posts = [{
     body: "Cpp's body"
 }]
 
+let ans = [{
+
+    _id: 12,
+    userid: 8,
+    title: 'This is a esay question',
+    body: 'I am a answer boyd, my id is 12, I belong to post 122, hahahah',
+    postid: 122,
+    vote: 10
+
+
+}, {
+
+    _id: 11,
+    userid: 7,
+    title: 'This is a very esay question',
+    body: 'I am anothoer answer boyd, my id is 11, I belong to post 121, hei hei hei',
+    postid: 121,
+    vote: 10
+
+}]
+
+
+let p = [{
+
+    _id: 122,
+    userid: 8,
+    title: 'Java post1',
+    body: 'Oh, java is so hard',
+    vote: 10,
+
+}, {
+
+    _id: 121,
+    userid: 7,
+    title: 'java post2',
+    body: 'Oh, java is so so hard',
+    vote: 10,
+
+}]
+
+let resp = [{
+
+    _id: 120,
+    userid: 8,
+    title: 'result Java post1',
+    body: 'Oh, here is whta you search java is so hard',
+    vote: 10,
+
+}, {
+
+    _id: 119,
+    userid: 7,
+    title: 'result java post2',
+    body: 'Oh,  here is whta you search java is so so hard',
+    vote: 10,
+
+}]
+
+
+
+
+
 
 var user = [{
         _id: uuid.v4(),
@@ -118,8 +180,41 @@ exports.finduserbyid = function(id) {
 };
 
 exports.DefaultSearch = function(user) {
+	console.log('DefaultSearch called')
 
     //harcoding now
-    return Promise.resolve(posts)
+    return Promise.resolve(p)
         // body... 
 };
+
+exports.findpostbyid = function(id) {
+
+    let p = {
+
+        _id: 123,
+        userid: 8,
+        title: 'Here is a single post for testing render',
+        body: 'Oh, here is a singple post \' body,  html is so hard, i am dying\nhtml is so hard, i am dying\nhtml is so hard, i am dying I stay out too late, got nothing in my brain That\'s what people say, that\'s what people say I go on too many dates, but I can\'t make them stay At least that\'s what people say, that\'s what people say But I keep cruising Can\'t stop, won\'t stop moving It\'s like I got this music in my mind Saying it\'s gonna be alright Cause the players gonna play, play, play, play, play And the haters gonna hate, hate, hate, hate, hate Baby, I\'m just gonna shake, shake, shake, shake, shake I shake it off, I shake it off Heartbreakers gonna break, break, break, break, break And the fakers gonna fake, fake, fake, fake, fake Baby, I\'m just gonna shake, shake, shake, shake, shake I shake it off, I shake it off I never miss a beat, I\'m lightning on my feet And that\'s…\n',
+        vote: 10,
+
+    }
+    return Promise.resolve(p);
+    /* body... */
+}
+
+exports.findanswerbypostid = function(id) {
+
+
+
+
+    return Promise.resolve(ans);
+
+
+}
+
+exports.SearchPost = function(query) {
+
+    return Promise.resolve(resp);
+}
+
+exports.database = require('./database.js');
