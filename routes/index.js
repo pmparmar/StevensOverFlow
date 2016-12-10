@@ -18,6 +18,48 @@ configPassport(passport);
 //     })
 // }
 
+let single_post_result = {
+            post: {
+                title: 'post title',
+                vote: 123,
+                body: 'post  body,post  body,post  body',
+                username: 'Lei Duan',
+                userpoints: 3456,
+                date: '11/03/1989'
+            },
+            answer: [{
+                username: 'Lei Diuan',
+                userpoints: 4,
+                vote: 12312,
+                date: '11/03/1989',
+                body: 'ans bodyans bodyans bodyans body',
+                comments: [{
+                        body: 'lei lei is gpood',
+                        username: 'lei'
+                    }, {
+                        body: 'heihei',
+                        username: 'name_123'
+                    }
+
+                ]
+
+            }, {
+                username: 4,
+                userpoints: 43,
+                vote: 2,
+                date: 'ahh',
+                body: 'b5678765678909765789',
+                comments: [{
+                        body: 'ffa',
+                        username: 'faasa'
+                    }, {
+                        body: 'fda',
+                        username: 'dsfa'
+                    }
+
+                ]
+            }]
+        }
 function signupcheck(email) {
 
     return Data.database.getUserByEmail(email).then(() => {
@@ -56,85 +98,51 @@ function edituser(id, body) {
 }
 
 let getpostinfo = function(id) {
+    console.log('getpostinfo called, id: '+ id);
+
 
     let single_post_result = {}
     let db = Data.database;
-    
 
-    db.getPostById(id)
-        .then((post) => {
-            single_post_result.post = post;
-            return db.getAnswersByPostId(post._id)
-        })
-        .then(answers => {
-            let commentsPromises = [];
-            single_post_result.answer = answers;
-            answers.forEach( function(element, index) {
-                commentsPromises.push(db.getCommentsByAnwersId(element._id));
-            });
-            return Promise.all(commentsPromises);
-        })
-        .then(comments => {
-            for (let i = 0; i < comments.length; ++i) {
-                single_post_result.answer[i].comments = comments[i];
-            }
-            console.log('number of answers in single_post_result: ' + single_post_result.answer.length)
-            // single_post_result is done
-            // be aware of answers and answer, no s !!!!
-            return Promise.resolve(single_post_result);
-        })
-        .catch(err => {
-            return Promise.reject(err);
-        })
-
-
-/*
-
-    let single_post_result = {
-        post: {
-            title: 'post title',
-            vote: 123,
-            body: 'post  body,post  body,post  body',
-            username: 'Lei Duan',
-            userpoints: 3456,
-            date: '11/03/1989'
-        },
-        answer: [{
-            username: 'Lei Diuan',
-            userpoints: 4,
-            vote: 12312,
-            date: '11/03/1989',
-            body: 'ans bodyans bodyans bodyans body',
-            comments: [{
-                    body: 'lei lei is gpood',
-                    username: 'lei'
-                }, {
-                    body: 'heihei',
-                    username: 'name_123'
+    return new Promise((res, rej) => {
+        db.getPostById(id)
+            .then((post) => {
+                single_post_result.post = post;
+                return db.getAnswersByPostId(post._id)
+            })
+            .then(answers => {
+                let commentsPromises = [];
+                single_post_result.answer = answers;
+                answers.forEach(function(element, index) {
+                    commentsPromises.push(db.getCommentsByAnwersId(element._id));
+                });
+                return Promise.all(commentsPromises);
+            })
+            .then(comments => {
+                for (let i = 0; i < comments.length; ++i) {
+                    single_post_result.answer[i].comments = comments[i];
                 }
+                console.log('number of answers in single_post_result: ' + single_post_result.answer.length)
+                    // single_post_result is done
+                    // be aware of answers and answer, no s !!!!
+                res(single_post_result);
+            })
+            .catch(err => {
+                console.log('err when getpostinfo:');
+                console.log(err);
+                rej(err);
+            })
 
-            ]
 
-        }, {
-            username: 4,
-            userpoints: 43,
-            vote: 2,
-            date: 'ahh',
-            body: 'b5678765678909765789',
-            comments: [{
-                    body: 'ffa',
-                    username: 'faasa'
-                }, {
-                    body: 'fda',
-                    username: 'dsfa'
-                }
+    });
 
-            ]
-        }]
-    }
 
-    */
- //   return Promise.resolve(single_post_result);
+    /*
+
+        
+
+        */
+    //   return Promise.resolve(single_post_result);
 
 }
 
@@ -284,11 +292,11 @@ const constructorMethod = (app) => {
         });
 
     app.get('/profile/:id', (req, res) => {
-        if (req.user && req.param.id == req.user._id) {
+        if (req.user && req.params.id == req.user._id) {
             res.redirect('/profile');
             return;
         }
-        getuserinfo(req.param.id).then(userinfo => {
+        getuserinfo(req.params.id).then(userinfo => {
             res.render('partials/profile', {
                 user: req.user,
                 postList: userinfo.post,
@@ -380,18 +388,16 @@ const constructorMethod = (app) => {
 
     //the single post page
     app.get('/post/:id', (req, res) => {
-        getpostinfo(req.param.id).then(postinfo => {
-            console.log('postinfo.post is');
+        getpostinfo(req.params.id).then(postinfo => {
+            console.log('\npostinfo.post is');
             console.log(postinfo.post);
 
-            console.log('postinfo.answer is');
-            console.log(postinfo.answer);
-
-
+            console.log('\npostinfo.answer is');
+            console.log(postinfo.answer);   
 
             res.render('partials/singlepost', {
-                post: postinfo.post,
-                answer: postinfo.answer
+                post: single_post_result.post,
+                answer: single_post_result.answer
 
             });
 
@@ -428,25 +434,23 @@ const constructorMethod = (app) => {
     //post method to create a new anster, 
     //no single page for answer, the form is on the bottom 
     app.post('/answering', (req, res) => {
+        console.log('in route answering post called');
 
-        if (!req.isAuthenticated()) {
-            res.render('partials/postform', {
-                loginerrormessage: 'Please login'
-            });
-        } else {
+        // the postid that this comment belongs to is included in the req.body
+        console.log('req.user._id is ');
+        console.log(req.user._id);
 
-            // the postid that this comment belongs to is included in the req.body
-            Data.answers.create(req.user, req.body).then(locationhash => {
+        Data.database.createAnswer(req.body, req.user._id, req.body.postid).then(ans => {
+            console.log('in route ans success, ans:');
+            console.log(ans);
+            // answer successed, go to the new answer location of the same post page
+            res.redirect('/post/' + req.body.postid);
+        }).catch(err => {
+            // answer falied, stay on the post page
+            res.redirect('/post/' + req.body.postid);
 
-                // answer successed, go to the new answer location of the same post page
-                res.redirect('/post/' + req.body.postid + '#' + locationhash);
-            }).catch(err => {
+        });
 
-                // answer falied, stay on the post page
-                res.redirect('/post/' + req.body.postid);
-
-            });
-        }
     });
 
     app.post('/editprofile', (req, res) => {

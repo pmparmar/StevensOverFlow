@@ -1,4 +1,3 @@
-           <h3>hahe{{post.title}}</h1>
             <div class="row question-header">
                 <!-- <a class="question-header-link" href="#" title="questoin header"></a> -->
                 <h3>{{post.title}}</h1>
@@ -115,7 +114,7 @@
                                         {{/each}}
                                             
                                             <div class="add-comment comment">
-                                                <a href="#" title="add your comment">add your comment</a>
+                                                <button id="add-comment-btn" title="add your comment">add your comment</button> 
                                             </div>
                                         </div>
                                     </td>
@@ -129,16 +128,25 @@
                     
                 </div>
             </div>
+            <h3>Your Answer</h3>
             <!-- post window with markdown -->
-            <form action="http://localhost:3000/" method="post" id="postForm">
+            <form action="/answering" method="post" id="answer-form">
                 <div class="form-group col-sm-7">
-                    <input class="form-control" name="title" type="text" placeholder="Title?">
+                    <input class="form-control" name="title" type="text" placeholder="Answer Title">
                     
                 </div>
-                <textarea id="inputField" ondragenter='rangeEnterHandler(event)' ondrop='dropHandler(event)' data-width="700" name="content" id="status-box" data-provide="markdown" rows="10"></textarea>
-                <label class="checkbox">
+
+                <div class="form-group col-sm-7 hideen">
+
+
+                    <input hidden name="postid" type="text" value="{{post._id}}">                    
+                </div>
+
+
+                <textarea id="inputField" ondragenter='rangeEnterHandler(event)' ondrop='dropHandler(event)' data-width="700" name="body" id="status-box" data-provide="markdown" rows="10"></textarea>
+               {{!--  <label class="checkbox">
                     <input name="publish" type="checkbox"> Publish
-                </label>
+                </label> --}}
                 <hr/>
                 <button type="submit" class="btn">Submit</button>
             </form>

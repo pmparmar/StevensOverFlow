@@ -53,7 +53,7 @@ var AnswerSchema = new mongoose.Schema({
 
     attachments: String,
     isAccepted: Boolean,
-    votes: {
+    vote: {
         type: Number,
         default: 0
     },
@@ -78,7 +78,7 @@ var PostSchema = new mongoose.Schema({
     body: String,
 
     attachments: String,
-    votes: {
+    vote: {
         type: Number,
         default: 0
     },
@@ -179,10 +179,10 @@ module.exports = {
     getUserByEmail: function(email, callback) {
         return new Promise((resolve, reject) => {
             this.getUsers().then(usr => {
-                let user_found = usr.filter(x => x.email ===email).shift();
-                if(!user_found)
+                let user_found = usr.filter(x => x.email === email).shift();
+                if (!user_found)
                     reject("Not user found by this email");
-                else{
+                else {
                     resolve(user_found);
                 }
 
@@ -211,23 +211,23 @@ module.exports = {
 
             var post = new Post(postObject);
             this.getUserById(userId)
-            .then((us) => {
-                post.userId = us;
-                post.save(function(err, post) {
-                    if (err) {
-                        reject(err);
-                    }
-                    us.posts.push(post);
-                    us.save();
-                    resolve(post);
-                });
-            })
-            .catch(err => {
-                reject(err);
-            })
+                .then((us) => {
+                    post.userId = us;
+                    post.save(function(err, post) {
+                        if (err) {
+                            reject(err);
+                        }
+                        us.posts.push(post);
+                        us.save();
+                        resolve(post);
+                    });
+                })
+                .catch(err => {
+                    reject(err);
+                })
 
             // this.getUserById(userId, function(us) {
-                
+
             // });
         })
     },
@@ -287,7 +287,7 @@ module.exports = {
     createAnswer: function(postObject, userId, postId, callback) {
         return new Promise((resolve, reject) => {
             var answer = new Answer(postObject);
-            this.getUserById(userId, function(us) {
+            this.getUserById(userId).then(us => {
                 answer.userId = us;
                 console.log("Hola")
                 Post.findById(postId, function(err, post) {
@@ -306,6 +306,7 @@ module.exports = {
                         resolve(answer);
                     });
                 });
+
 
 
             });
