@@ -7,6 +7,110 @@ const configPassport = require('./passportconfig');
 const passport = require('passport');
 configPassport(passport);
 
+function signupcheck(email) {
+
+    return Data.database.getUserByEmail(email).then(() => {
+        console.log('check: existing')
+        return Promise.reject("Duplicated Email");
+    }).catch(() => {
+        console.log('check: no existing')
+        return Promise.resolve("haha");
+    });
+
+}
+
+
+let getpostinfo = function(id) {
+
+    let single_post_result = {
+        post: {
+            title: 'post title',
+            vote: 123,
+            body: 'post  body,post  body,post  body',
+            username: 'Lei Duan',
+            userpoints: 3456,
+            date: '11/03/1989'
+        },
+        answer: [{
+            username: 'Lei Diuan',
+            userpoints: 4,
+            vote: 12312,
+            date: '11/03/1989',
+            body: 'ans bodyans bodyans bodyans body',
+            comments: [{
+                    body: 'lei lei is gpood',
+                    username: 'lei'
+                }, {
+                    body: 'heihei',
+                    username: 'name_123'
+                }
+
+            ]
+
+        }, {
+            username: 4,
+            userpoints: 43,
+            vote: 2,
+            date: 'ahh',
+            body: 'b5678765678909765789',
+            comments: [{
+                    body: 'ffa',
+                    username: 'faasa'
+                }, {
+                    body: 'fda',
+                    username: 'dsfa'
+                }
+
+            ]
+        }]
+    }
+    return Promise.resolve(single_post_result);
+
+}
+
+function getuserinfo(id) {
+
+    let res = {
+        post: [{
+                _id: 122,
+                title: 'post title',
+                vote: 123,
+                body: 'post  body,post  body,post  body',
+                date: '11/03/1989'
+            }, {
+                _id: 123,
+                title: 'post title',
+                vote: 123,
+                body: 'post  heihie body,post  body,post  body',
+                date: '12/03/1989'
+            }
+
+        ],
+        answer: [{
+
+            postid: 122,
+            userid: 8,
+            title: 'This is a esay question',
+            body: 'I am a answer boyd, my id is 12, I belong to post 122, hahahah',
+            vote: 10
+
+
+        }, {
+
+            postid: 121,
+            userid: 7,
+            title: 'This is a very esay question',
+            body: 'I am anothoer answer boyd, my id is 11, I belong to post 121, hei hei hei',
+            vote: 10
+
+        }]
+
+    }
+    return Promise.resolve(res);
+
+
+}
+
 
 const constructorMethod = (app) => {
 
@@ -32,30 +136,17 @@ const constructorMethod = (app) => {
     );
 
 
+    app.get('/test', (req, res) => {
+        Data.database.getUsers().then(ur => {
 
-    app.post('/signup', (req, res) => {
-        Data.Signup(req.body.email, req.body.password).then(info => {
-            console.log(info); //e.g.  sign up successed, usrname: pasword:
-
-            /* refer from
-            http://code.runnable.com/VKHrGJKvwo55gHL7/express-passport-js-login-and-register-for-node-js-and-hello-world            
-            */
-            passport.authenticate('local')(req, res, function() {
-                res.redirect('/profile');
-            });
-
-        }).catch(err => {
-            res.render('partials/sigup', {
-                email: req.body.email,
-                message: err
-            });
-        });
-
+            res.json(ur);
+        })
     });
 
+
     app.get('/login', (req, res) => {
-            res.redirect('/');
-       
+        res.redirect('/');
+
     });
 
     app.get('/logout',
@@ -65,23 +156,69 @@ const constructorMethod = (app) => {
         });
 
 
+    app.post('/signup', (req, res) => {
 
-    app.get('/signup', (req, res) => {
-        render('partials/login', {
-            // message expecting from login
-            message: req.flash('signupmessage')
-        });
+        signupcheck(req.body.email).then(() => {
 
+            Data.database.createUser(req.body).then(user => {
+                console.log("createUser successed:"); //e.g.  sign up successed, usrname: pasword:
+                console.log(user);
+                /* refer from
+                http://code.runnable.com/VKHrGJKvwo55gHL7/express-passport-js-login-and-register-for-node-js-and-hello-world            
+                */
+                passport.authenticate('local')(req, res, function() {
+                    res.json({
+                        "status": "success"
+                    });
+                });
+
+            }).catch(err => {
+
+                console.log('\n in route createUser falied:');
+                console.log(err.errmsg.toString());
+                res.json({
+                    "status": err.errmsg
+                });
+            });
+
+        }).catch(err => {
+            res.json({
+                "status": err
+            });
+
+        })
     });
+
+
 
     app.get('/profile',
         require('connect-ensure-login').ensureLoggedIn(),
         function(req, res) {
-            res.render('partials/profile_working', {
-                user: req.user
-           //     partial:"profile-script"
+            getuserinfo(req.user._id).then(userinfo => {
+                res.render('partials/profile_working', {
+                    user: userinfo.user,
+                    postList: userinfo.post,
+                    answerList: userinfo.answer
+                })
+            });
+
+
+        });
+
+    app.get('/profile/:id', (req, res) => {
+        if (req.user && req.param.id == req.user._id) {
+            res.redirect('/profile');
+            return;
+        }
+        getuserinfo(req.param.id).then(userinfo => {
+            res.render('partials/profile', {
+                user: userinfo.user,
+                postList: userinfo.post,
+                answerList: userinfo.answer
             })
         });
+
+    })
 
     app.get('/', (req, res) => {
 
@@ -90,11 +227,25 @@ const constructorMethod = (app) => {
         // in order to display the homepage postlist
         // it will always work even user is undefined
         Data.DefaultSearch(req.user).then(postlist => {
-            res.render('partials/home', {
-                list: postlist,
-                user: req.user,
-                loginmessage:loginmessage
-            });
+            console.log('SearchPost give me:');
+            console.log(postlist);
+            // console.log(postlist[0]._id);
+
+            if (req.user) {
+                console.log('req.user is true');
+                console.log(req.user);
+                res.render('partials/home', {
+                    postList: postlist,
+                    user: req.user
+                    // a: "what the fuck"
+                });
+            } else {
+                res.render('partials/home', {
+                    postList: postlist
+                    // a: "what the fuck"
+                });
+            }
+
         }).catch(err => {
             res.render('partials/home', {
                 user: req.user,
@@ -102,17 +253,26 @@ const constructorMethod = (app) => {
             })
         });
     });
-    
+
     // when search cliked with a 'post' dropdown tag
-    app.get('/searchpost', (req, res) => {
+    app.get('/:searchpost', (req, res) => {
         //excepting searching ULR like :
         // :3000/search?q=java
         // then i got java
-        Data.post.Search(req.query.q).then(postlist => {
-            res.render('partials/home', {
-                list: postlist,
-                user: req.user
-            })
+        console.log('get searchpost called')
+        Data.SearchPost(req.query.q).then(postlist => {
+
+            if (req.user) {
+                res.render('partials/home', {
+                    postList: postlist,
+                    user: req.user
+                });
+            } else {
+                res.render('partials/home', {
+                    postList: postlist,
+                });
+
+            }
         }).catch(err => {
             res.render('partials/home', {
                 user: req.user,
@@ -120,7 +280,7 @@ const constructorMethod = (app) => {
             })
         });
     });
-    
+
     // when search cliked with a 'user' dropdown tag
     // search user ???  not sure
     app.get('/searchuser', (req, res) => {
@@ -142,10 +302,21 @@ const constructorMethod = (app) => {
 
     //the single post page
     app.get('/post/:id', (req, res) => {
-        Data.findpostbyid(req.param.id).then(post => {
+        getpostinfo(req.param.id).then(postinfo => {
+            console.log('postinfo.post is');
+            console.log(postinfo.post);
+
+            console.log('postinfo.answer is');
+            console.log(postinfo.answer);
+
+
+
             res.render('partials/singlepost', {
-                post: post
+                post: postinfo.post,
+                answer: postinfo.answer
+
             });
+
         }).catch(err => {
             res.render('partials/singlepost', {
                 message: err
@@ -184,7 +355,7 @@ const constructorMethod = (app) => {
                 loginerrormessage: 'Please login'
             });
         } else {
-            
+
             // the postid that this comment belongs to is included in the req.body
             Data.answers.create(req.user, req.body).then(locationhash => {
 
@@ -209,7 +380,7 @@ const constructorMethod = (app) => {
                 loginerrormessage: 'Please login'
             });
         } else {
-            
+
             // the answer that this comment belongs to is included in the req.body
             // the post id that the answer belongs to is included in the req.body too
             Data.cmoments.create(req.user, req.body).then(locationhash => {

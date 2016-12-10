@@ -38,9 +38,7 @@ const rewriteUnsupportedBrowserMethods = (req, res, next) => {
 
 // ---------- for debug only ----------
 app.use(function(req, res, next) {
-        console.log('req.method and url  is ' + req.method + " " + req.url);
-        console.log("req--------------------:")
-  
+          
         next();
     })
 

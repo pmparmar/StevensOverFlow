@@ -28,10 +28,8 @@
 
 
     function load(arg) {
-        console.log('load called, arg is '+arg);
         switch (arg) {
             case "#profile":
-                console.log('in profile case');
                 hiddenall();
                 body1.removeClass("hidden");
                 tag1.addClass("active");
@@ -39,7 +37,6 @@
                 // statements_1
                 break;
             case "#edit":
-                console.log('in edit case');
 
                 hiddenall();
                 body2.removeClass("hidden");
@@ -48,7 +45,6 @@
                 // statements_1
                 break;
             case "#question":
-                console.log('in question case');
 
                 hiddenall();
                 body3.removeClass("hidden");
@@ -57,7 +53,6 @@
                 // statements_1
                 break;
             case "#answer":
-                console.log('in answer case');
 
                 hiddenall();
                 body4.removeClass("hidden");
@@ -73,7 +68,6 @@
     }
 
     function hiddenall() {
-        console.log('hiddenall called');
         body1.addClass("hidden");
         body2.addClass("hidden");
         body3.addClass("hidden");

@@ -9,12 +9,12 @@
         <!-- Latest compiled and minified JavaScript -->
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
-        <script src="/public/js/main.js" type="text/javascript" charset="utf-8" async defer></script>
-
+        
         <!--wanna use partial-->
         <!--wanna use partial-->
 
         <link rel="stylesheet" href="/public/css/main.css">
+        <link rel="stylesheet" href="/public/css/singlepost.css">
         <title>Stevns Overflow</title>
     </head>
     <body>
@@ -32,7 +32,7 @@
                                 <div class="col-sm-5 col-sm-offset-5">
                                     <button type="button" class="btn btn-primary">About Us</button>
                                     <button type="button" id="loginBtn" class="btn btn-info" data-toggle="modal" data-target="#loginModal">Log in</button>
-                                    <button type="button" id="userbtn" class="btn btn-info hidden" value="{{user.displayname}}">{{user.displayname}}</button>
+                                    <button type="button" id="userbtn" class="btn btn-info hidden" value="{{user.name}}">{{user.name}}</button>
 
                                 </div>
                                 
@@ -70,12 +70,12 @@
                                                     <div class="panel-body">
                                                         <div class="row">
                                                             <div class="col-lg-12">
-                                                            <div class="alert alert-danger hidden" id="loginmessage">
-                                                                {{loginmessage}}
-                                                            </div>
+                                                                   
+                                                            
                                                                 <form id="login-form" action="/login" method="post" role="form" style="display: block;">
+                                                                    <div class="alert alert-danger hidden" id="login-form-alert"></div>                                                       
                                                                     <div class="form-group">
-                                                                        <input type="text" name="username" id="username" tabindex="1" class="form-control" placeholder="Username" value="">
+                                                                        <input type="text" name="email" id="username" tabindex="1" class="form-control" placeholder="Email Address" value="">
                                                                     </div>
                                                                     <div class="form-group">
                                                                         <input type="password" name="password" id="password" tabindex="2" class="form-control" placeholder="Password">
@@ -101,15 +101,21 @@
                                                                         </div>
                                                                     </div>
                                                                 </form>
-                                                                <form id="register-form" action="http://phpoll.com/register/process" method="post" role="form" style="display: none;">
+                                                                <form id="register-form"  role="form" style="display: none;">
+
+                                                                    <div class="alert alert-danger hidden" id="sigup-form-alert"></div>
+
                                                                     <div class="form-group">
-                                                                        <input type="text" name="username" id="username" tabindex="1" class="form-control" placeholder="Username" value="">
+                                                                        <input type="text" name="username" id="signup-username" tabindex="1" class="form-control" placeholder="Username" value="">
+                                                                    </div>
+
+                                                                    
+                                                               
+                                                                    <div class="form-group">
+                                                                        <input type="email" name="email" id="signup-email" tabindex="1" class="form-control" placeholder="Email Address" value="">
                                                                     </div>
                                                                     <div class="form-group">
-                                                                        <input type="email" name="email" id="email" tabindex="1" class="form-control" placeholder="Email Address" value="">
-                                                                    </div>
-                                                                    <div class="form-group">
-                                                                        <input type="password" name="password" id="password" tabindex="2" class="form-control" placeholder="Password">
+                                                                        <input type="password" name="password" id="signup-password" tabindex="2" class="form-control" placeholder="Password">
                                                                     </div>
                                                                     <div class="form-group">
                                                                         <input type="password" name="confirm-password" id="confirm-password" tabindex="2" class="form-control" placeholder="Confirm Password">
@@ -171,9 +177,9 @@
                             </ul>
                             <form class="navbar-form navbar-left">
                                 <div class="form-group">
-                                    <input type="text" class="form-control" placeholder="Search">
+                                    <input type="text" id="searchbox" class="form-control" placeholder="Search here">
                                 </div>
-                                <button type="submit" class="btn btn-default">Submit</button>
+                                <button type="button" id="searchbtn" class="btn btn-default">Search</button>
                             </form>
                             <ul class="nav navbar-nav navbar-right">
                                 <li><a href="#">Ask Question</a></li>
@@ -191,5 +197,19 @@
 
         <script type="text/javascript" src="/public/js/profile.js"></script>
 
+{{!--  here is script for main --}}
+    <script src="/public/js/main.js" type="text/javascript" charset="utf-8" async defer></script>
+
+
+        {{!-- for single post  --}}
+         <script type="text/javascript" src="../public/js/marked.js"></script>
+    <script type="text/javascript" src="../public/js/markdown.js"></script>
+    <script type="text/javascript" src="../public/js/to-markdown.js"></script>
+    <script type="text/javascript" src="../public/js/bootstrap-markdown.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/3.6.2/firebase.js"></script>
+    <script type="text/javascript" src="../public/js/firebase-setup.js"></script>
+    <script type="text/javascript" src="../public/js/facebook-setup.js"></script>
+    <script type="text/javascript" src="../public/js/post.js"></script>
+       {{!-- for single post end --}}
     </body>
 </html>

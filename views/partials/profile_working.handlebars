@@ -28,26 +28,21 @@
                         <!-- <i class="fa fa-coffee"></i> -->
                         This is an <strong>.alert</strong>. Use this to show important messages to the user.
                     </div>
-                    <h3>{{user.displayname}}</h3>
+                    <h3>{{user.name}}</h3>
                     <form class="form-horizontal" role="form">
-                        <div class="form-group">
-                            <label class="col-lg-3 control-label">First name:</label>
-                            <div class="col-lg-8">
-                                <input class="form-control" type="text" value={{user.First_Name}} disabled>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label class="col-lg-3 control-label">Last name:</label>
-                            <div class="col-lg-8">
-                                <input class="form-control" type="text" value={{user.Last_Name}} disabled>
-                            </div>
-                        </div>
                         <div class="form-group">
                             <label class="col-lg-3 control-label">Email:</label>
                             <div class="col-lg-8">
-                                <input class="form-control" type="text" placeholder="xxxx@stevens.edu">
+                                <input class="form-control" type="text" value={{user.Email}} disabled>
                             </div>
                         </div>
+                        <div class="form-group">
+                            <label class="col-lg-3 control-label">Point:</label>
+                            <div class="col-lg-8">
+                                <input class="form-control" type="text" value={{user.points}} disabled>
+                            </div>
+                        </div>
+                       
                         <!-- <div class="form-group">
               <label class="col-lg-3 control-label">Time Zone:</label>
               <div class="col-lg-8">
@@ -181,38 +176,47 @@
         </div>
         <div id="tag3content" class="hidden">
             <table class="table table-inverse table-bordered table-condensed table-striped table-hover" id="note-data">
-                <thead>
-                    <tr>
-                        <th>QuestionTitle</th>
-                        <th>vote</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {{#each noteList}}
-                    <tr class='clickable-row' data-href="/note/{{id}}">
-                        <td>{{NoteTitle}}</td>
-                        <td>{{NoteSummary}}</td>
-                    </tr>
-                    {{/each}}
-                </tbody>
-            </table>
+
+    <thead>
+    <tr>
+        <th>Title</th>
+        <th>Body</th>
+    </tr>
+    </thead>
+    <tbody>
+    <p>{{a}}</p>
+
+    {{#each postList}}
+        <tr class='clickable-row' data-href="/post/{{_id}}">
+            <td>{{title}}</td>
+            <td>{{body}}</td>
+        </tr>
+    {{/each}}
+
+    </tbody>
+</table>
         </div>
         <div id="tag4content" class="hidden">
             <table class="table table-inverse table-bordered table-condensed table-striped table-hover" id="note-data">
-                <thead>
-                    <tr>
-                        <th>AnswerTitle</th>
-                        <th>vote</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {{#each noteList}}
-                    <tr class='clickable-row' data-href="/note/{{id}}">
-                        <td>{{NoteTitle}}</td>
-                        <td>{{NoteSummary}}</td>
-                    </tr>
-                    {{/each}}
-                </tbody>
+
+    <thead>
+    <tr>
+        <th>Title</th>
+        <th>Body</th>
+    </tr>
+    </thead>
+    <tbody>
+    <p>{{a}}</p>
+
+    {{#each answerList}}
+        <tr class='clickable-row' data-href="/post/{{postid}}">
+            <td>{{title}}</td>
+            <td>{{body}}</td>
+        </tr>
+    {{/each}}
+
+    </tbody>
+</table>y>
             </table>
         </div>
         </div>

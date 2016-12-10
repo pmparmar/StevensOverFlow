@@ -6,16 +6,25 @@ const passport = require('passport'),
 constructorMethod = (passport) => {
 
     passport.use(new LocalStrategy({
-            passReqToCallback: true
+            passReqToCallback: true,
+            usernameField: 'email',
+            passwordField: 'password'
         },
-        function(req, username, password, done) {
-            UserData.findOne(username, password).then(res => {
-                    console.log('findOne found :');
-                    console.log(res);
-                    return done(null, res);
+        function(req, email, password, done) {
+            UserData.database.getUserByEmail(email).then(user => {
+
+                console.log('getUserByEmail give me:');
+                console.log(user);
+                    if (user.email === email)
+                        return done(null, user);
+                    else {
+                        console.log('found user by this email, but wrong password');
+                        return done(null, false, req.flash('loginmessage', "Wrong password"));
+                    }
                 })
                 .catch(err => {
-                    console.log('findOne cannt find: ' + err);
+                    console.log('in passport config, cannt find this email, err:');
+                    console.log(err);
                     return done(null, false, req.flash('loginmessage', err));
                 });
         }
@@ -27,7 +36,7 @@ constructorMethod = (passport) => {
     });
 
     passport.deserializeUser(function(id, cb) {
-        UserData.findById(id).then(res => {
+        UserData.database.getUserById(id).then(res => {
             cb(null, res);
         }).catch(err => {
             cb(err, null);
