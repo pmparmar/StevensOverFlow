@@ -105,6 +105,12 @@ $(function() {
         window.location.href = $(this).data("href");
     });
 
+    $("#searchbox").keypress(e => {
+        if (e.which == 13) {
+            searchbtn.click();
+            return false
+        }
+    });
 
 
     console.log('userbtn.val() is ' + userbtn.val());
@@ -114,7 +120,7 @@ $(function() {
         userbtn.removeClass("hidden");
     } else {
         console.log('in front, userbtn length does not>0');
-      //  $("#ask-btn").attr('disabled','disabled');
+        //  $("#ask-btn").attr('disabled','disabled');
     }
 
 

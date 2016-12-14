@@ -9,6 +9,12 @@
         load(location["hash"]);
         /* body... */
     })
+
+    var oname = $("#edit-name").val();
+    var oemail = $("#edit-email").val();
+    var opassword = $("#edit-password").val();
+    var oicon = $("#iconimg").attr('src');
+
     var tag1 = $("#tag1");
     var tag2 = $("#tag2");
     var tag3 = $("#tag3");
@@ -32,64 +38,65 @@
         var name = $("#edit-name").val();
         var email = $("#edit-email").val();
         var password = $("#edit-password").val();
+        var icon = $("#iconimg").attr('src');
+        console.log('in front js submit event, ulr is ' + icon)
         var confirmpassword = $("#edit-confirm-password").val();
-        if (!name) {
-            edit_formAlert.text('You must provide a username');
-            edit_formAlert.removeClass('hidden');
-            return;
-        }
-        if (!email) {
-            edit_formAlert.text('You must provide a email');
-            edit_formAlert.removeClass('hidden');
-            return;
-        }
-        if (!password) {
-            edit_formAlert.text('You must provide a password');
-            edit_formAlert.removeClass('hidden');
-            return;
-        }
-        if (confirmpassword !== password) {
-            edit_formAlert.text('Confrim Password does not match');
+
+        if ((confirmpassword.length > 0 || password.length > 0) && (confirmpassword !== password)) {
+            edit_formAlert.text('Two Passwords does not match');
             edit_formAlert.removeClass('hidden');
             return;
         }
 
-        if (name && email && password) {
-            var requestConfig = {
-                method: "POST",
-                url: "/editprofile",
-                contentType: 'application/json',
-                data: JSON.stringify({
-                    name: name,
-                    email: email,
-                    password: password,
-                })
-            };
 
-            $.ajax(requestConfig).then(function(responseMessage) {
-                console.log('using ajax in submit');
-                if (responseMessage.status === "success") {
-                    //jump to new note after add note successed
-                    console.log('in front js, edit successed, goingto jump');
-                    window.location.href = '/profile#edit';
-                } else {
-                    console.log('in front js: signup failed')
-                    console.log(responseMessage.status);
-                    edit_formAlert.text(responseMessage.status);
-                    edit_formAlert.removeClass('hidden');
-                }
+
+        var requestConfig = {
+            method: "POST",
+            url: "/editprofile",
+            contentType: 'application/json',
+            data: JSON.stringify({
+                name: (name == oname) ? "" : name,
+                icon: (icon == oicon) ? "" : icon,
+                email: (email == oemail) ? "" : email,
+                password: (password == opassword) ? "" : password
             })
-        }
+        };
+
+        $.ajax(requestConfig).then(function(responseMessage) {
+            console.log('using ajax in submit');
+            if (responseMessage.status === "success") {
+                //jump to new note after add note successed
+                console.log('in front js, edit successed, goingto jump');
+                edit_formAlert.removeClass('alert-warning');
+                edit_formAlert.addClass('alert-success');
+
+                edit_formAlert.text("Edit profile successed!");
+                edit_formAlert.removeClass('hidden');
+
+            } else {
+                console.log('in front js: edit failed')
+              
+
+                edit_formAlert.removeClass('alert-success');
+                edit_formAlert.addClass('alert-warning');
+
+                edit_formAlert.text(responseMessage.msg.errmsg);
+                edit_formAlert.removeClass('hidden');
+            }
+        })
+
 
     });
 
 
 
-
-
-
-
-
+    $("#iconurl").keypress(e => {
+        if (e.which == 13) {
+            $("#iconimg").attr('src', $("#iconurl").val());
+            console.log('iconurl keypress called');
+            return false
+        }
+    });
 
     function load(arg) {
         switch (arg) {

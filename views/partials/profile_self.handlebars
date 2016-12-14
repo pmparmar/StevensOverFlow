@@ -17,19 +17,22 @@
                 <!-- left column -->
                 <div class="col-md-3">
                     <div class="text-center">
-                        <img src="http://lorempixel.com/200/200/nature/" class="avatar img-circle" alt="avatar">
+                        <img src="{{user.icon}}" class="avatar img-circle" alt="avatar"
+                        style="width:205px;height:190px">
                         
                     </div>
                 </div>
                 <!-- edit form column -->
                 <div class="col-md-9 personal-info">
-                    <div class="alert alert-info alert-dismissable">
-                        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                        <!-- <i class="fa fa-coffee"></i> -->
-                        This is an <strong>.alert</strong>. Use this to show important messages to the user.
-                    </div>
+                    
                     <h3>{{user.name}}</h3>
                     <form class="form-horizontal" role="form">
+                    <div class="form-group">
+                            <label class="col-lg-3 control-label">Name:</label>
+                            <div class="col-lg-8">
+                                <input class="form-control" type="text" value="{{user.name}}" disabled>
+                            </div>
+                        </div>
                         <div class="form-group">
                             <label class="col-lg-3 control-label">Email:</label>
                             <div class="col-lg-8">
@@ -71,14 +74,17 @@
                 <!-- left column -->
                 <div class="col-md-3">
                     <div class="text-center">
-                        <img src="http://lorempixel.com/200/200/nature/" class="avatar img-circle" alt="avatar">
-                        <h6>Upload a different photo...</h6>
-                        <input type="file" class="form-control">
+                        <img id="iconimg" src="{{user.icon}}" class="avatar img-circle" alt="avatar"
+                        style="width:205px;height:190px">
+                        <h6>Input a url and press enter...</h6>
+                        <input id="iconurl"type="url" class="form-control">
                     </div>
                 </div>
                 <!-- edit form column -->
                 <div class="col-md-9 personal-info">
-                    <div class="alert alert-danger hidden" id="edit-form-alert">                        
+                   
+                    <div id="edit-form-alert" class="alert alert-warning alert-dismissable hidden">
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                     </div>
                     <h3>Personal info</h3>
                     <form class="form-horizontal" id="edit-profile-form" role="form">
@@ -91,7 +97,7 @@
                         <div class="form-group">
                             <label class="col-lg-3 control-label">Email:</label>
                             <div class="col-lg-8">
-                                <input class="form-control" id="edit-email" name="email" type="text" value="{{user.email}}">
+                                <input class="form-control" id="edit-email" name="email" type="text" value="{{user.email}}" placeholder="" ="{{user.email}}">
                             </div>
                         </div>
                        
@@ -172,14 +178,14 @@
     <p>{{a}}</p>
 
     {{#each answerList}}
-        <tr class='clickable-row' data-href="/post/{{postid}}">
+        <tr class='clickable-row' data-href="/post/{{postId}}">
             <td>{{title}}</td>
             <td>{{body}}</td>
         </tr>
     {{/each}}
 
     </tbody>
-</table>y>
+</table>
             </table>
         </div>
         </div>

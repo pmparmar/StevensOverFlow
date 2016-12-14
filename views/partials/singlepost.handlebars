@@ -34,12 +34,12 @@
                                                     <!-- end facebook share button -->
                                                 </div>
                                                 <div class="col-sm-4 postInfo-box">
-                                                    <p>{{post.date}}</p>
+                                                    <p>Post Date:{{post.date}}</p>
                                                 </div>
-                                                <div class="col-sm-4 userInfo-box">
+                                                <div class="col-sm-4 userInfo-box" onclick="window.location='/profile/{{post.userid}}'">
                                                     <div class="row">
                                                         <div class="col-sm-4">
-                                                            <img class=" user-icon" src="../image/Tianxiao2.jpg" alt="">
+                                                            <img class=" user-icon" src="{{post.usericon}}" alt="">
                                                         </div>
                                                         <div class="user-name">
                                                             <p style="margin-bottom: 0;">{{post.username}}</p>
@@ -86,12 +86,12 @@
                                                 </div>
                                             </div>
                                             <div class="col-sm-4 postInfo-box">
-                                                <p>post date: {{date}}</p>
+                                                <p>Post date: {{date}}</p>
                                             </div>
-                                            <div class="col-sm-4 userInfo-box">
+                                            <div class="col-sm-4 userInfo-box" onclick="window.location='/profile/{{userid}}'">
                                                 <div class="row">
                                                     <div class="col-sm-4">
-                                                        <img class=" user-icon" src="../image/Tianxiao2.jpg" alt="">
+                                                        <img class=" user-icon" src="{{usericon}}" alt="">
                                                     </div>
                                                     <div class="col-sm-8 user-name">
                                                         <p style="margin-bottom: 0;">{{username}}</p>
@@ -105,17 +105,42 @@
                                 <tr>
                                     <td class="votecell"></td>
                                     <td>
-                                        <div id="comments-id(this id should be the parent anwser's id)">
+                                        <div id="comment-block-{{_id}}">
                                         {{#each comments}}
                                             <div id="comment-id" class="comment">
                                                 <span>
-                                                {{body}} - </span><a href="#" title="comment user">{{username}}</a>
+                                                {{body}} - </span><a href="/profile/{{userid}}" title="comment user">{{username}}</a>
                                             </div>
-                                        {{/each}}
-                                            
+                                        {{/each}}                                            
                                             <div class="add-comment comment">
-                                                <button id="add-comment-btn" title="add your comment">add your comment</button> 
+                                                <button class="comment-btn" id="comment-{{_id}}" onclick="commentbtnevent('{{_id}}')" title="add your comment">add your comment</button> 
                                             </div>
+                                            <form id="comment-form-{{_id}}" class="hidden" action="/commenting" method="post">
+                <div class="form-group col-sm-7">
+                    <input class="form-control" name="body" type="text" placeholder="Comment...">
+                    
+                </div>
+
+                <div class="form-group col-sm-7">
+
+                    <input hidden name="answerid" type="text" value="{{_id}}">                    
+                </div>
+
+                <div class="form-group col-sm-7">
+
+                    <input hidden name="postid" type="text" value="{{postid}}">                    
+                </div>
+               
+               {{!--  <label class="checkbox">
+                    <input name="publish" type="checkbox"> Publish
+                </label> --}}
+                <hr/>
+                <button type="submit" class="btn">Add comment</button>
+            </form>
+
+
+          
+
                                         </div>
                                     </td>
                                 </tr>
@@ -136,8 +161,7 @@
                     
                 </div>
 
-                <div class="form-group col-sm-7 hideen">
-
+                <div class="form-group col-sm-7 hidden">
 
                     <input hidden name="postid" type="text" value="{{post._id}}">                    
                 </div>
@@ -147,8 +171,11 @@
                {{!--  <label class="checkbox">
                     <input name="publish" type="checkbox"> Publish
                 </label> --}}
-                <hr/>
+              
                 <button type="submit" class="btn">Submit</button>
+                  <hr/>
             </form>
+
+            
             <!-- endpost window with markdown -->
            

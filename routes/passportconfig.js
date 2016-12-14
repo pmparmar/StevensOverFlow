@@ -13,9 +13,7 @@ constructorMethod = (passport) => {
         function(req, email, password, done) {
             UserData.database.getUserByEmail(email).then(user => {
 
-                console.log('getUserByEmail give me:');
-                console.log(user);
-                    if (user.email === email)
+                    if (user.password === password)
                         return done(null, user);
                     else {
                         console.log('found user by this email, but wrong password');

@@ -145,11 +145,23 @@ module.exports = {
             })
         })
     },
-    updateUser: function(id, field, value, callback) {
+
+    updateUser: function(id, fields, values, callback) {
+
+       
         return new Promise((resolve, reject) => {
 
+            console.log('in database fields and values are');
+            console.log(fields);
+            console.log('');
+            console.log(values);
+
             a = {};
-            a[field] = value;
+            fields.forEach( function(element, index) {
+                a[element] = values[index];
+            });
+            console.log('in database new a is');
+            console.log(a);
             User.update({
                 _id: id
             }, {
@@ -192,9 +204,9 @@ module.exports = {
 
 
     getPosts: function(callback) {
+        console.log('in database getPosts called');
 
         return new Promise((resolve, reject) => {
-
 
             Post.find(function(err, posts) {
                 if (err) {
@@ -366,15 +378,19 @@ module.exports = {
         })
     },
     createComment: function(postObject, userId, answerId, callback) {
+        console.log('creating comment')
         return new Promise((resolve, reject) => {
 
             var comment = new Comment(postObject);
-            this.getUserById(userId, function(us) {
+            this.getUserById(userId)
+            .then(us => {
+
                 console.log(us);
                 if (!us) {
                     reject("User not found");
                 }
                 comment.userId = us;
+                console.log(answerId);
                 Answer.findById(answerId, function(err, answer) {
                     comment.answerId = answer;
                     comment.save(function(err, comment) {
@@ -388,7 +404,7 @@ module.exports = {
                         resolve(answer);
                     });
                 })
-            });
+            })
         })
     },
     deleteComment: function(id, callback) {
@@ -474,7 +490,7 @@ module.exports = {
     getAnswersByUserId: function(id, callback) {
         return new Promise((resolve, reject) => {
 
-            Post.find({
+            Answer.find({
                 userId: id
             }, function(err, us) {
                 if (err) {
@@ -487,7 +503,7 @@ module.exports = {
     getAnswersByPostId: function(id, callback) {
         return new Promise((resolve, reject) => {
 
-            Post.find({
+            Answer.find({
                 postId: id
             }, function(err, us) {
                 if (err) {
